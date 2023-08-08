@@ -32,7 +32,7 @@ var host = new HostBuilder()
                 var appSettings = AppSettings.LoadSettings();
                 IKernel kernel = new KernelBuilder()
                     .WithChatCompletionService(appSettings.Kernel)
-                    .WithAzureTextEmbeddingGenerationService("text-embedding-ada-002","https:// ... your endpoint ... .openai.azure.com/","id")
+                    .WithAzureTextEmbeddingGenerationService("text-embedding-ada-002",appSettings.Kernel.Endpoint,AppSettings.GetApiKey())
                     .WithMemoryStorage(memory)
                     .WithLogger(logger)
                     .Build();
