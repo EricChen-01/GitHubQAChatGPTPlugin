@@ -1,7 +1,7 @@
 # Semantic Kernel ChatGPT GitHubQA Plugin
 
 This project is a ChatGPT plugin for interacting with GitHub. The plugin can summarize a github repository and then answer particular questions about it.
-
+Worked in collaboration with Donovan Morgan.
 ## Prerequisites
 
 - [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this starter.
