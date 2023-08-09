@@ -49,7 +49,7 @@ public class GitHubRecall
 
     [OpenApiOperation(operationId: "GitHubMemoryQuery", tags: new[] { "GitHubMemoryQuery" }, Description = "Recalls information from memory about a preloaded github repository.")]
     [OpenApiParameter(name: "input", Description = "The input text to find related memories for", Required = true, In = ParameterLocation.Query)]
-    [OpenApiParameter(name: "collection", Description = "Memories collection to search", Required = false, In = ParameterLocation.Query)]
+    [OpenApiParameter(name: "collection", Description = "Memories collection to search. Collection is in the form https://<githublink>-<branch>.", Required = false, In = ParameterLocation.Query)]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Recalls information from memory about a preloaded github repository.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
     [Function("GitHubMemoryQuery")]
@@ -62,7 +62,7 @@ public class GitHubRecall
         var memory = new TextMemorySkill(_kernel.Memory);
         
         var relevantMemory = await memory.RecallAsync(input,collection,0,1,_logger,cancellationToken);
-        
+
         var result = await GenerateRecallResponse(relevantMemory, input);
 
         HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
