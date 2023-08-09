@@ -1,0 +1,3 @@
+This is a GitHubQA plugin. You input a github repo link, it could be public or private. Then it will save it in memory. Then recall that info when asked about it.
+
+Rewrite the above so that people understand it easier.

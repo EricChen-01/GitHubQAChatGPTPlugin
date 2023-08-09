@@ -39,7 +39,7 @@ var host = new HostBuilder()
 
                 // Load your semantic functions...
                 kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
-                kernel.ImportSkill(new TextMemorySkill(kernel.Memory),"textmemoryskill");
+                //kernel.ImportSkill(new TextMemorySkill(kernel.Memory),"textmemoryskill");
                 
                 return kernel;
             })

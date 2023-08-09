@@ -31,7 +31,8 @@ public class GitHubRecall
     private readonly IKernel _kernel;
     private readonly ILogger<GitHubRecall> _logger;
 
-   
+
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GitHubRecall"/> class.
@@ -54,10 +55,15 @@ public class GitHubRecall
     [Function("GitHubMemoryQuery")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous,"post")] HttpRequestData req,CancellationToken cancellationToken)
     {
-        var result = "";
+        var input = req.Query["input"];
+        var collection = req.Query["collection"];
+        collection ??= "generic";
+
+        var memory = new TextMemorySkill(_kernel.Memory);
         
-
-
+        var relevantMemory = await memory.RecallAsync(input,collection,0,1,_logger,cancellationToken);
+        
+        var result = await GenerateRecallResponse(relevantMemory, input);
 
         HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type","text/plain");
@@ -67,6 +73,29 @@ public class GitHubRecall
 
 
     #region private
+
+    /// <summary>
+    /// Answers a following question given recalled info.
+    /// </summary>
+    /// <param name="recalledInfo"></param>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    private async Task<string> GenerateRecallResponse(string recalledInfo, string input)
+    {
+        string RecallCodeSnippetDefinition = $"{recalledInfo}\n" + @"
+        ---
+        Considering only the information above, which has been loaded from a GitHub repository, answer the following.
+        Question: {{$input}}
+
+        Answer:
+    ";
     
+        var recall = _kernel.CreateSemanticFunction(RecallCodeSnippetDefinition);
+
+
+        var response = await recall.InvokeAsync(input);
+
+        return $"{response}";
+    }
     #endregion
 }
