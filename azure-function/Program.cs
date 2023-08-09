@@ -30,16 +30,28 @@ var host = new HostBuilder()
 
                 // Register your AI Providers...
                 var appSettings = AppSettings.LoadSettings();
-                IKernel kernel = new KernelBuilder()
+                KernelBuilder kernelBuilder = new KernelBuilder()
                     .WithChatCompletionService(appSettings.Kernel)
-                    .WithAzureTextEmbeddingGenerationService("text-embedding-ada-002",appSettings.Kernel.Endpoint,AppSettings.GetApiKey())
                     .WithMemoryStorage(memory)
-                    .WithLogger(logger)
-                    .Build();
+                    .WithLogger(logger);
+
+                // If you're AI provider is Azure OpenAI    
+                if(appSettings.Kernel.ServiceType.ToUpperInvariant() == ServiceTypes.AzureOpenAI)
+                {
+                    kernelBuilder = kernelBuilder    
+                    .WithAzureTextEmbeddingGenerationService("text-embedding-ada-002",appSettings.Kernel.Endpoint,appSettings.Kernel.ApiKey);
+                }
+                // If you're AI provider is OpenAI
+                else if(appSettings.Kernel.ServiceType.ToUpperInvariant() == ServiceTypes.OpenAI)
+                {
+                    kernelBuilder = kernelBuilder    
+                    .WithOpenAITextEmbeddingGenerationService(appSettings.Kernel.DeploymentOrModelId,appSettings.Kernel.ApiKey, appSettings.Kernel.OrgId, appSettings.Kernel.ServiceId);
+                }
+
+                IKernel kernel =  kernelBuilder.Build();
 
                 // Load your semantic functions...
                 kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
-                //kernel.ImportSkill(new TextMemorySkill(kernel.Memory),"textmemoryskill");
                 
                 return kernel;
             })
