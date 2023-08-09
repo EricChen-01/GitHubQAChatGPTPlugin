@@ -41,6 +41,7 @@ var host = new HostBuilder()
                     kernelBuilder = kernelBuilder    
                     .WithAzureTextEmbeddingGenerationService("text-embedding-ada-002",appSettings.Kernel.Endpoint,appSettings.Kernel.ApiKey);
                 }
+                
                 // If you're AI provider is OpenAI
                 else if(appSettings.Kernel.ServiceType.ToUpperInvariant() == ServiceTypes.OpenAI)
                 {
