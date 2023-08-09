@@ -197,7 +197,7 @@ public class GitHubQA
                 {
             
                     await this._kernel.Memory.SaveInformationAsync(
-                        "generic",//$"{repositoryUri}-{repositoryBranch}",
+                        $"{repositoryUri}-{repositoryBranch}",
                         text: $"{paragraphs[i]} File:{repositoryUri}/blob/{repositoryBranch}/{fileUri}",
                         id: $"{fileUri}_{i}",
                         cancellationToken: cancellationToken);
@@ -209,7 +209,7 @@ public class GitHubQA
             
                 
                 await this._kernel.Memory.SaveInformationAsync(
-                    "generic",//$"{repositoryUri}-{repositoryBranch}",
+                    $"{repositoryUri}-{repositoryBranch}",
                     text: $"{code} File:{repositoryUri}/blob/{repositoryBranch}/{fileUri}",
                     id: fileUri,
                     cancellationToken: cancellationToken);
