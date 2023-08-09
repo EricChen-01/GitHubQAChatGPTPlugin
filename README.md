@@ -53,3 +53,5 @@ dotnet build
 cd bin/Debug/net6.0
 func host start  
 ```
+
+To test this plugin in Microsoft's [Chat-Copilot](https://github.com/microsoft/chat-copilot) simply add `http://localhost:7071/.well-known/ai-plugin.json` to the custom plugin adder.
